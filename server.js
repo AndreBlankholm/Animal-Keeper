@@ -6,9 +6,7 @@ const express = require("express");
 // When Heroku runs the app, we teell the app to use this port if it has been set and if not, set to 3001
 const PORT = process.env.PORT || 3001;
 //server to listen for requests
-app.listen(PORT, () => {
-    console.log(`API server now on port ${PORT}!`);
-  });
+const app = express();
 ////////////////////////////////////////////////////////////////////////////
 
 function filterByQuery(query, animalsArray) {
@@ -71,6 +69,6 @@ app.get("/api/animals", (req, res) => {
 
 ////////////////////////////////////////////////////////////////////////////
 //method to listen for requests
-app.listen(3001, () => {
-  console.log(`API server now on port 3001!`);
-});
+app.listen(PORT, () => {
+    console.log(`API server now on port ${PORT}!`);
+  });
