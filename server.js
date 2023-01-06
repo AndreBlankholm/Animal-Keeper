@@ -58,6 +58,11 @@ function filterByQuery(query, animalsArray) {
   return filteredResults;
 }
 
+function findById(id, animalsArray) {
+    const result = animalsArray.filter(animal => animal.id === id)[0];
+    return result;
+  }
+
 //request-----get requires 2 arugments/ 1) the string that describes the route, 2)the callback evreytime
 app.get("/api/animals", (req, res) => {
   let results = animals;
@@ -66,6 +71,15 @@ app.get("/api/animals", (req, res) => {
   }
   res.json(results);
 });
+
+app.get('/api/animals/:id', (req, res) => {
+    const result = findById(req.params.id, animals);
+    if (result) {
+      res.json(result);
+    } else {
+      res.send(404);
+    }
+  });
 
 ////////////////////////////////////////////////////////////////////////////
 //method to listen for requests
