@@ -7,6 +7,14 @@ const express = require("express");
 const PORT = process.env.PORT || 3001;
 //server to listen for requests
 const app = express();
+
+// -MIDDLEWARE- Both of the above middleware functions need to be set up every time you create a server that's looking to accept POST data.
+//parse incoming string or array data/ used in POST and takes the data converts it to key/value pairings 
+app.use(express.urlencoded({ extended: true }));
+// parse incoming JSON data
+app.use(express.json());
+
+
 ////////////////////////////////////////////////////////////////////////////
 
 function filterByQuery(query, animalsArray) {
@@ -80,6 +88,15 @@ app.get('/api/animals/:id', (req, res) => {
       res.send(404);
     }
   });
+
+  app.post('/api/animals', (req, res) => {
+    // req.body is where our incomming content will be
+    console.log(req.body);
+    res.json(req.body);
+  });
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////
 //method to listen for requests
