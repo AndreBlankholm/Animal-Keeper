@@ -71,6 +71,16 @@ function findById(id, animalsArray) {
     return result;
   }
 
+function createNewAnimal(body, animalsArray) {
+  console.log(body);
+  // function main code
+  
+  //return the finished code
+  return body;
+};
+
+//--------Routing------------------
+
 //request-----get requires 2 arugments/ 1) the string that describes the route, 2)the callback evreytime
 app.get("/api/animals", (req, res) => {
   let results = animals;
@@ -90,8 +100,15 @@ app.get('/api/animals/:id', (req, res) => {
   });
 
   app.post('/api/animals', (req, res) => {
-    // req.body is where our incomming content will be
+    // req.body is where our incomming content will be created
     console.log(req.body);
+    //give object a unique id at end of array
+    req.body.id = animals.length.toString();
+
+    // send the updated req.body data to creatNewAnimal()
+    // add animal to json file and animals array in this function
+    const animal = createNewAnimal(req.body, animals);
+
     res.json(req.body);
   });
 
