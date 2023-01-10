@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 const { animals } = require("./data/animals.json");
 
 // instantiates the server
@@ -71,14 +74,19 @@ function findById(id, animalsArray) {
     return result;
   }
 
-function createNewAnimal(body, animalsArray) {
-  console.log(body);
-  // function main code
-  
-  //return the finished code
-  return body;
-};
+  function createNewAnimal(body, animalsArray) {
+    const animal = body;
+    // adding to the array.json file.
+    animalsArray.push(animal);
 
+    // fs and path methods are used here... null means we dont wat to edit any exsiting data and 2 means I want to create white spaces around the data formatted
+    fs.writeFileSync(
+      path.join(__dirname, './data/animals.json'),
+      JSON.stringify({animals : animalsArray }, null, 2)
+    );
+  
+    return animal;
+  }
 //--------Routing------------------
 
 //request-----get requires 2 arugments/ 1) the string that describes the route, 2)the callback evreytime
@@ -100,16 +108,13 @@ app.get('/api/animals/:id', (req, res) => {
   });
 
   app.post('/api/animals', (req, res) => {
-    // req.body is where our incomming content will be created
-    console.log(req.body);
-    //give object a unique id at end of array
+    // set id based on what the next index of the array will be
     req.body.id = animals.length.toString();
-
-    // send the updated req.body data to creatNewAnimal()
+  
     // add animal to json file and animals array in this function
     const animal = createNewAnimal(req.body, animals);
-
-    res.json(req.body);
+  
+    res.json(animal);
   });
 
 
