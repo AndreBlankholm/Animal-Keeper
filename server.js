@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 const { animals } = require("./data/animals.json");
 
@@ -12,20 +12,17 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 
 // -MIDDLEWARE- Both of the above middleware functions need to be set up every time you create a server that's looking to accept POST data.
-//parse incoming string or array data/ used in POST and takes the data converts it to key/value pairings 
+//parse incoming string or array data/ used in POST and takes the data converts it to key/value pairings
 app.use(express.urlencoded({ extended: true }));
 // parse incoming JSON data
 app.use(express.json());
 
-
 ////////////////////////////////////////////////////////////////////////////
 
 function filterByQuery(query, animalsArray) {
-
   let personalityTraitsArray = [];
   // Note that we save the animalsArray as filteredResults here:
   let filteredResults = animalsArray;
-
 
   if (query.personalityTraits) {
     // Save personalityTraits as a dedicated array.
@@ -45,7 +42,7 @@ function filterByQuery(query, animalsArray) {
       // so at the end we'll have an array of animals that have every one
       // of the traits when the .forEach() loop is finished.
       filteredResults = filteredResults.filter(
-                        // returns an index if true
+        // returns an index if true
         (animal) => animal.personalityTraits.indexOf(trait) !== -1
       );
     });
@@ -70,23 +67,42 @@ function filterByQuery(query, animalsArray) {
 }
 
 function findById(id, animalsArray) {
-    const result = animalsArray.filter(animal => animal.id === id)[0];
-    return result;
-  }
+  const result = animalsArray.filter((animal) => animal.id === id)[0];
+  return result;
+}
 
-  function createNewAnimal(body, animalsArray) {
-    const animal = body;
-    // adding to the array.json file.
-    animalsArray.push(animal);
+function createNewAnimal(body, animalsArray) {
+  const animal = body;
+  // adding to the array.json file.
+  animalsArray.push(animal);
 
-    // fs and path methods are used here... null means we dont wat to edit any exsiting data and 2 means I want to create white spaces around the data formatted
-    fs.writeFileSync(
-      path.join(__dirname, './data/animals.json'),
-      JSON.stringify({animals : animalsArray }, null, 2)
-    );
-  
-    return animal;
+  // fs and path methods are used here... null means we dont wat to edit any exsiting data and 2 means I want to create white spaces around the data formatted
+  fs.writeFileSync(
+    path.join(__dirname, "./data/animals.json"),
+    JSON.stringify({ animals: animalsArray }, null, 2)
+  );
+
+  return animal;
+}
+
+// validation of the Post to add an animal to the array
+
+function validateAnimal(animal) {
+  if (!animal.name || typeof animal.name !== "string") {
+    return false;
   }
+  if (!animal.species || typeof animal.species !== "string") {
+    return false;
+  }
+  if (!animal.diet || typeof animal.diet !== "string") {
+    return false;
+  }
+  if (!animal.personalityTraits || !Array.isArray(animal.personalityTraits)) {
+    return false;
+  }
+  return true;
+}
+
 //--------Routing------------------
 
 //request-----get requires 2 arugments/ 1) the string that describes the route, 2)the callback evreytime
@@ -98,30 +114,30 @@ app.get("/api/animals", (req, res) => {
   res.json(results);
 });
 
-app.get('/api/animals/:id', (req, res) => {
-    const result = findById(req.params.id, animals);
-    if (result) {
-      res.json(result);
-    } else {
-      res.send(404);
-    }
-  });
+app.get("/api/animals/:id", (req, res) => {
+  const result = findById(req.params.id, animals);
+  if (result) {
+    res.json(result);
+  } else {
+    res.send(404);
+  }
+});
 
-  app.post('/api/animals', (req, res) => {
-    // set id based on what the next index of the array will be
-    req.body.id = animals.length.toString();
-  
-    // add animal to json file and animals array in this function
+app.post("/api/animals", (req, res) => {
+  // want to set an id / set id based on what the next index of the array will be
+  req.body.id = animals.length.toString();
+
+  // if any data in req.body is incorrect, send 400 error back
+  if (!validateAnimal(req.body)) {
+    res.status(400).send("The animal is not properly formatted.");
+  } else {
     const animal = createNewAnimal(req.body, animals);
-  
     res.json(animal);
-  });
-
-
-
+  }
+});
 
 ////////////////////////////////////////////////////////////////////////////
 //method to listen for requests
 app.listen(PORT, () => {
-    console.log(`API server now on port ${PORT}!`);
-  });
+  console.log(`API server now on port ${PORT}!`);
+});
