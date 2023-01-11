@@ -16,6 +16,8 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 // parse incoming JSON data
 app.use(express.json());
+//so the server knows we ask for the frontend links thats on our html pages aka ('public') its a file path
+app.use(express.static('public'));
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -103,7 +105,7 @@ function validateAnimal(animal) {
   return true;
 }
 
-//--------Routing------------------
+//---Back End-----Routing------------------
 
 //request-----get requires 2 arugments/ 1) the string that describes the route, 2)the callback evreytime
 app.get("/api/animals", (req, res) => {
@@ -136,8 +138,29 @@ app.post("/api/animals", (req, res) => {
   }
 });
 
+
+
+//----Front End---------Routing---------------------------- 
+
+//create routes to serve index.html  "./" tells where to find the file we want the server to read and send back to client
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
+app.get('/animals', (req, res) => {
+  res.sendFile(path.join(__dirname, "./public/animals.html"));
+});
+
+app.get('/zookeepers', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/zookeepers.html'));
+});
+// this * acts like a wildcard. Any route thats not prevously define will fall under this request and will recive this (homepage) response
+// response should always be last
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
+});
 ////////////////////////////////////////////////////////////////////////////
-//method to listen for requests
+//method to listen for requests -- THIS SHOULD ALWAYS BE LAST
 app.listen(PORT, () => {
   console.log(`API server now on port ${PORT}!`);
 });
