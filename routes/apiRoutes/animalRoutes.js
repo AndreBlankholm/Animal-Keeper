@@ -1,8 +1,6 @@
-const router = require('express').Router();
-
-const { filterByQuery, findById, createNewAnimal, validateAnimal } = require('../../lib/animals');  // every ../ is one level higher so ../../ is 2 levels higher
-// grabbing contents of the database
-const { animals } = require('../../data/animals.json');
+const router = require("express").Router();
+const { filterByQuery, findById, createNewAnimal, validateAnimal, } = require("../../lib/animals");
+const { animals } = require("../../data/animals");
 
 //---Back End-----Routing------------------aka api/
 
@@ -37,5 +35,4 @@ router.get("/animals", (req, res) => {
     }
   });
   
-
-module.exports = router;
+  module.exports  = router;

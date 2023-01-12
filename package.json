@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/AndreBlankholm/Animal-Keeper/issues"
   },
-  "homepage": "https://github.com/AndreBlankholm/Animal-Keeper#readme"
+  "homepage": "https://github.com/AndreBlankholm/Animal-Keeper#readme",
+  "directories": {
+    "lib": "lib"
+  }
 }

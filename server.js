@@ -2,7 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const apiRoutes = require('./routes/apiRoutes');
 const htmlRoutes = require('./routes/htmlRoutes');
-const { animals } = require("./data/animals.json");
+const { animals } = require('./data/animals.json');
+const { zookeepers } = require('./data/zookeepers.json');
 
 // instantiates the server
 const express = require("express");
